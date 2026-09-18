@@ -1,1 +1,390 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
 
+<title>USF VIDEO - AI Video Maker</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#0b1120;
+    color:#fff;
+    min-height:100vh;
+}
+
+header{
+    padding:22px 18px;
+    text-align:center;
+    background:linear-gradient(135deg,#111827,#172554);
+    border-bottom:1px solid #26334d;
+}
+
+.logo{
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:#22c55e;
+}
+
+.tagline{
+    margin-top:7px;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+.container{
+    width:min(900px,94%);
+    margin:25px auto;
+}
+
+.card{
+    background:#111827;
+    border:1px solid #26334d;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+h2{
+    font-size:20px;
+    margin-bottom:16px;
+}
+
+label{
+    display:block;
+    margin:14px 0 7px;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+textarea,
+select,
+input[type="file"]{
+    width:100%;
+    border:1px solid #334155;
+    background:#0f172a;
+    color:white;
+    border-radius:12px;
+    padding:13px;
+    outline:none;
+}
+
+textarea{
+    min-height:130px;
+    resize:vertical;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:12px;
+    padding:15px;
+    margin-top:18px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.generate{
+    background:#22c55e;
+    color:#052e16;
+}
+
+.generate:hover{
+    opacity:.9;
+}
+
+.result{
+    display:none;
+}
+
+.preview{
+    background:#020617;
+    border:1px dashed #475569;
+    border-radius:15px;
+    min-height:230px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:25px;
+    color:#94a3b8;
+}
+
+.loading{
+    display:none;
+    text-align:center;
+    margin-top:18px;
+    color:#86efac;
+}
+
+.spinner{
+    width:30px;
+    height:30px;
+    border:4px solid #334155;
+    border-top:4px solid #22c55e;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:0 auto 10px;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+.footer{
+    text-align:center;
+    color:#64748b;
+    padding:20px;
+    font-size:13px;
+}
+
+.whatsapp{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    background:#16a34a;
+    color:white;
+    padding:13px;
+    border-radius:12px;
+    margin-top:12px;
+    font-weight:700;
+}
+
+@media(max-width:600px){
+    .row{
+        grid-template-columns:1fr;
+    }
+
+    .logo{
+        font-size:27px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">USF <span>VIDEO</span></div>
+    <div class="tagline">AI Video Maker for USF SOLAR</div>
+</header>
+
+<main class="container">
+
+    <section class="card">
+        <h2>🎬 AI Video बनाइए</h2>
+
+        <label for="prompt">आप किस तरह का वीडियो बनाना चाहते हैं?</label>
+
+        <textarea id="prompt"
+        placeholder="उदाहरण: USF SOLAR की टीम घर की छत पर solar panel installation कर रही है। वीडियो professional और attractive होना चाहिए।"></textarea>
+
+        <div class="row">
+
+            <div>
+                <label for="duration">वीडियो की लंबाई</label>
+                <select id="duration">
+                    <option value="15">15 सेकंड</option>
+                    <option value="30" selected>30 सेकंड</option>
+                    <option value="60">60 सेकंड</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="language">भाषा</label>
+                <select id="language">
+                    <option value="hi">Hindi</option>
+                    <option value="en">English</option>
+                    <option value="gu">Gujarati</option>
+                </select>
+            </div>
+
+        </div>
+
+        <label for="format">वीडियो Format</label>
+
+        <select id="format">
+            <option value="9:16">9:16 — Shorts / Reels</option>
+            <option value="16:9">16:9 — YouTube</option>
+            <option value="1:1">1:1 — Social Media</option>
+        </select>
+
+        <label for="photo">अपनी Solar Photo जोड़ें</label>
+        <input type="file" id="photo" accept="image/*">
+
+        <button class="generate" onclick="generateVideo()">
+            🚀 AI VIDEO बनाएं
+        </button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>USF VIDEO तैयार हो रहा है...</div>
+        </div>
+    </section>
+
+    <section class="card result" id="result">
+
+        <h2>🎥 आपका Video Project</h2>
+
+        <div class="preview" id="preview">
+            आपका generated video यहाँ दिखाई देगा।
+        </div>
+
+        <button onclick="downloadProject()">
+            📥 Project Download
+        </button>
+
+        <a class="whatsapp"
+           href="https://wa.me/917487865366"
+           target="_blank">
+            💬 USF SOLAR WhatsApp
+        </a>
+
+    </section>
+
+</main>
+
+<div class="footer">
+    © 2026 USF SOLAR • USF VIDEO
+</div>
+
+<script>
+
+function generateVideo(){
+
+    const prompt = document.getElementById("prompt").value.trim();
+    const duration = document.getElementById("duration").value;
+    const language = document.getElementById("language").value;
+    const format = document.getElementById("format").value;
+
+    if(!prompt){
+        alert("पहले बताइए कि आपको किस तरह का वीडियो बनाना है।");
+        return;
+    }
+
+    const loading = document.getElementById("loading");
+    const result = document.getElementById("result");
+    const preview = document.getElementById("preview");
+
+    loading.style.display = "block";
+    result.style.display = "none";
+
+    /*
+      यह पहला UI version है।
+      असली AI video generation API/model
+      अगले चरण में जोड़ा जाएगा।
+    */
+
+    setTimeout(function(){
+
+        loading.style.display = "none";
+        result.style.display = "block";
+
+        preview.innerHTML = `
+            <div>
+                <div style="font-size:45px;margin-bottom:15px;">🎬</div>
+
+                <h3 style="color:#fff;margin-bottom:12px;">
+                    USF VIDEO Project Ready
+                </h3>
+
+                <p style="margin-bottom:8px;">
+                    <b>Prompt:</b> ${escapeHTML(prompt)}
+                </p>
+
+                <p>
+                    Duration: ${duration}s |
+                    Language: ${language.toUpperCase()} |
+                    Format: ${format}
+                </p>
+
+                <p style="margin-top:15px;color:#86efac;">
+                    अगला version इसमें real AI video generation जोड़ेगा।
+                </p>
+            </div>
+        `;
+
+    },1200);
+}
+
+
+function escapeHTML(text){
+
+    return text
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function downloadProject(){
+
+    const prompt = document.getElementById("prompt").value;
+    const duration = document.getElementById("duration").value;
+    const language = document.getElementById("language").value;
+    const format = document.getElementById("format").value;
+
+    const project = `
+USF VIDEO
+==========
+
+Prompt:
+${prompt}
+
+Duration:
+${duration} seconds
+
+Language:
+${language}
+
+Format:
+${format}
+
+USF SOLAR
+WhatsApp: +91 7487865366
+`;
+
+    const blob = new Blob([project],{
+        type:"text/plain"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "USF-VIDEO-project.txt";
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+}
+
+</script>
+
+</body>
+                                                        </html>
